@@ -11,8 +11,9 @@ import (
 	"syscall"
 
 	"github.com/fnxr21/brand/config"
+	"github.com/fnxr21/brand/internal/handler"
+	"github.com/fnxr21/brand/internal/repository"
 	"github.com/fnxr21/brand/protobuf/golang_protobuf_brand"
-	"github.com/fnxr21/brand/protobuf/server"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
@@ -71,8 +72,11 @@ func StartRPCServer() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
+	userRepository := repository.Repositorybrand(config.DB)
 
-	golang_protobuf_brand.RegisterCrudServer(s, &server.BrandService{})
+	h := handler.HandlerBrand(userRepository)
+	
+	golang_protobuf_brand.RegisterCrudServer(s, h)
 
 	log.Printf("gRPC server listening on port %v\n", GRPCPORT)
 	if err := s.Serve(lis); err != nil {

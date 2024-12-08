@@ -3,7 +3,7 @@ package config
 import (
 	"log"
 
-	"github.com/fnxr21/brand/entities"
+	"github.com/fnxr21/brand/internal/entities"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
